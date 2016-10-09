@@ -31,25 +31,7 @@ int main(int argc, char ** argv)
 		return 0;
 	}
 	
-	/*
-	 * To make this truly binary, I will only use 2 gray levels (0 and 1).
-	 * 0 = black, 1 = white
-	 */
-	img.SetNumberGrayLevels(1);
-
-	int rows = img.num_rows();
-	int cols = img.num_columns();
-
-	for (int i = 0; i < rows; i++)
-	{
-		for (int j = 0; j < cols; j++)
-		{
-			if (img.GetPixel(i, j) < threshold)
-				img.SetPixel(i, j, 0);
-			else
-				img.SetPixel(i, j, 1);
-		}
-	}
+	Threshold(img, threshold);
 
 	if (!WriteImage(output, img)) {
 		cout << "Can\'t write to file." << endl;
