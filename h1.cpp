@@ -16,17 +16,15 @@ using namespace ComputerVisionProjects;
 
 int main(int argc, char ** argv)
 {
-	// My chosen threshold is 125, though 120-125 produce similar results.
-	if (argc != 4) {
+	if (argc != 3) {
 		cout <<
-		"Usage: " << argv[0] << " <input_image.pgm> <threshold> <output_image.pgm>"
+		"Usage: " << argv[0] << " {input gray-level image} {output gray-level edge image}"
 		<< endl;
 		return 0;
 	}
 
 	const string input(argv[1]);
-	const int threshold = atof(argv[2]);
-	const string output(argv[3]);
+	const string output(argv[2]);
 
 	return 0;
 }
