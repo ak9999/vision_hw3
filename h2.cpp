@@ -16,7 +16,7 @@ int main(int argc, char ** argv)
 {
 	if (argc != 4) {
 		cout <<
-		"Usage: " << argv[0] << " <input_gray-level_image.pgm> <threshold> <output_binary_image.pgm>"
+		"Usage: " << argv[0] << " {input gray-level image} {input gray-level threshold} {output binary image}"
 		<< endl;
 		return 0;
 	}
