@@ -79,6 +79,8 @@ bool WriteImage(const std::string &output_filename, const Image &an_image);
 void DrawLine(int x0, int y0, int x1, int y1, int color,
 	      Image *an_image);
 
+void Threshold(Image &an_image);
+
 }  // namespace ComputerVisionProjects
 
 #endif  // COMPUTER_VISION_IMAGE_H_
