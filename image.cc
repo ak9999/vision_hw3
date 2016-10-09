@@ -282,8 +282,9 @@ DrawLine(int x0, int y0, int x1, int y1, int color,
   }
 }
 
+// Functions added by me
 
-void Threshold(Image &an_image)
+void Threshold(Image &an_image, int threshold)
 {
   /*
    * To make this truly binary, I will only use 2 gray levels (0 and 1).
