@@ -295,9 +295,9 @@ void Threshold(Image &an_image, int threshold)
   int rows = an_image.num_rows();
   int cols = an_image.num_columns();
 
-  for (int i = 0; i < rows; i++)
+  for (int i = 0; i < rows; ++i)
   {
-    for (int j = 0; j < cols; j++)
+    for (int j = 0; j < cols; ++j)
     {
       if (an_image.GetPixel(i, j) < threshold)
         an_image.SetPixel(i, j, 0);
