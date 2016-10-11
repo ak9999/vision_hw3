@@ -308,10 +308,10 @@ void Threshold(Image &an_image, int threshold)
   }
 } // end Threshold
 
-void Sobel(Image &img, Image &dst)
+void Sobel(Image &in, Image &out)
 {
-  int rows = img.num_rows();
-  int cols = img.num_columns();
+  int rows = in.num_rows();
+  int cols = in.num_columns();
 
   float sobel_x[3][3] = { {-1, 0, 1}, {-2, 0, 2}, {-1, 0, 1} };
 
@@ -321,19 +321,27 @@ void Sobel(Image &img, Image &dst)
   {
     for (int j = 2; j < cols-2; ++j)
     {
-      int x = (sobel_x[0][0] * img.GetPixel(i-1,j-1)) + (sobel_x[0][1] * img.GetPixel(i,j-1)) + (sobel_x[0][2] * img.GetPixel(i+1,j-1)) +
-              (sobel_x[1][0] * img.GetPixel(i-1,j))   + (sobel_x[1][1] * img.GetPixel(i,j))   + (sobel_x[1][2] * img.GetPixel(i+1,j)) +
-              (sobel_x[2][0] * img.GetPixel(i-1,j+1)) + (sobel_x[2][1] * img.GetPixel(i,j+1)) + (sobel_x[2][2] * img.GetPixel(i+1,j+1));
+      int x = (sobel_x[0][0] * in.GetPixel(i-1,j-1)) + (sobel_x[0][1] * in.GetPixel(i,j-1)) + (sobel_x[0][2] * in.GetPixel(i+1,j-1)) +
+              (sobel_x[1][0] * in.GetPixel(i-1,j))   + (sobel_x[1][1] * in.GetPixel(i,j))   + (sobel_x[1][2] * in.GetPixel(i+1,j)) +
+              (sobel_x[2][0] * in.GetPixel(i-1,j+1)) + (sobel_x[2][1] * in.GetPixel(i,j+1)) + (sobel_x[2][2] * in.GetPixel(i+1,j+1));
 
-      int y = (sobel_y[0][0] * img.GetPixel(i-1,j-1)) + (sobel_y[0][1] * img.GetPixel(i,j-1)) + (sobel_y[0][2] * img.GetPixel(i+1,j-1)) +
-              (sobel_y[1][0] * img.GetPixel(i-1,j))   + (sobel_y[1][1] * img.GetPixel(i,j))   + (sobel_y[1][2] * img.GetPixel(i+1,j)) +
-              (sobel_y[2][0] * img.GetPixel(i-1,j+1)) + (sobel_y[2][1] * img.GetPixel(i,j+1)) + (sobel_y[2][2] * img.GetPixel(i+1,j+1));
+      int y = (sobel_y[0][0] * in.GetPixel(i-1,j-1)) + (sobel_y[0][1] * in.GetPixel(i,j-1)) + (sobel_y[0][2] * in.GetPixel(i+1,j-1)) +
+              (sobel_y[1][0] * in.GetPixel(i-1,j))   + (sobel_y[1][1] * in.GetPixel(i,j))   + (sobel_y[1][2] * in.GetPixel(i+1,j)) +
+              (sobel_y[2][0] * in.GetPixel(i-1,j+1)) + (sobel_y[2][1] * in.GetPixel(i,j+1)) + (sobel_y[2][2] * in.GetPixel(i+1,j+1));
 
-      int mag = ceil( hypot(x, y) );
-      //cout << mag << endl;
-      dst.SetPixel(i, j, mag);
+      int magnitude = ceil( hypot(x, y) );
+      out.SetPixel(i, j, magnitude);
     }
   }
+}
+
+void InitBlankImage(Image &an_image, int height, int width, int num_gray_levels)
+{
+  an_image.SetNumberGrayLevels(num_gray_levels);
+  an_image.AllocateSpaceAndSetSize(height, width);
+  for (unsigned int i = 0; i < height; ++i) // Make an_image black.
+    for (unsigned int j = 0; j < width; ++j)
+      an_image.SetPixel(i, j, 0);
 }
 
 }  // namespace ComputerVisionProjects

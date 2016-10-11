@@ -34,18 +34,12 @@ int main(int argc, char ** argv)
 	}
 
 	// Create output image with same dimensions as input.
-	Image dst;
-	dst.SetNumberGrayLevels(img.num_gray_levels());
-	dst.AllocateSpaceAndSetSize(img.num_rows(), img.num_columns());
-	for (unsigned int i = 0; i < dst.num_rows(); ++i) // Make dst black.
-		for (unsigned int j = 0; j < dst.num_columns(); ++j)
-			dst.SetPixel(i, j, 0);
+	Image edge_image;
+	InitBlankImage(edge_image, img.num_rows(), img.num_columns(), img.num_gray_levels());
 
-	Sobel(img, dst);
+	Sobel(img, edge_image);
 
-	
-
-	if (!WriteImage(output, dst)) {
+	if (!WriteImage(output, edge_image)) {
 		cout << "Can\'t write to file." << endl;
 		return 0;
 	}
