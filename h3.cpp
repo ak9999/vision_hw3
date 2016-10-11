@@ -2,7 +2,8 @@
  * Author: Abdullah Khan
  * h3: Hough Transform
  * Brightness of each pixel (voting bin) in the output gray-level Hough image should be proportional
- * to the number of votes it receives. The last output filename will store the votes of the voting array
+ * to the number of votes it receives.
+ * The last output filename will store the votes of the voting array
  * in a representation of my choice. Note that the gray-level output will be used just for visualization.
  */
 
@@ -27,7 +28,7 @@ int main(int argc, char ** argv)
 	}
 
 	const string input(argv[1]);
-	const string hough(argv[2]);
+	const string output(argv[2]);
 	const string votingarray(argv[3]);
 
 	Image img;
