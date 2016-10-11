@@ -83,6 +83,8 @@ void DrawLine(int x0, int y0, int x1, int y1, int color,
 
 void Threshold(Image &an_image, int threshold);
 
+void Sobel(Image &img);
+
 }  // namespace ComputerVisionProjects
 
 #endif  // COMPUTER_VISION_IMAGE_H_

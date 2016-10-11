@@ -9,6 +9,7 @@
 #include <cstring>
 #include <cstdio>
 #include <cstdlib>
+#include <cmath>
 
 using namespace std;
 
@@ -306,6 +307,38 @@ void Threshold(Image &an_image, int threshold)
     }
   }
 } // end Threshold
+
+void Sobel(Image &img)
+{
+  int rows = img.num_rows();
+  int cols = img.num_columns();
+
+  float sobel_x[3][3] = {{-1, 0, 1},
+              {-2, 0, 2},
+              {-1, 0, 1}};
+
+  float sobel_y[3][3] = {{-1, -2, -1},
+              {0, 0, 0},
+              {1, 2, 1}};
+
+  for (int i = 2; i < rows-2; ++i)
+  {
+    for (int j = 2; j < cols-2; ++j)
+    {
+      int x = (sobel_x[0][0] * img.GetPixel(i-1,j-1)) + (sobel_x[0][1] * img.GetPixel(i,j-1)) + (sobel_x[0][2] * img.GetPixel(i+1,j-1)) +
+                  (sobel_x[1][0] * img.GetPixel(i-1,j))   + (sobel_x[1][1] * img.GetPixel(i,j))   + (sobel_x[1][2] * img.GetPixel(i+1,j)) +
+                  (sobel_x[2][0] * img.GetPixel(i-1,j+1)) + (sobel_x[2][1] * img.GetPixel(i,j+1)) + (sobel_x[2][2] * img.GetPixel(i+1,j+1));
+
+            int y = (sobel_y[0][0] * img.GetPixel(i-1,j-1)) + (sobel_y[0][1] * img.GetPixel(i,j-1)) + (sobel_y[0][2] * img.GetPixel(i+1,j-1)) +
+                  (sobel_y[1][0] * img.GetPixel(i-1,j))   + (sobel_y[1][1] * img.GetPixel(i,j))   + (sobel_y[1][2] * img.GetPixel(i+1,j)) +
+                  (sobel_y[2][0] * img.GetPixel(i-1,j+1)) + (sobel_y[2][1] * img.GetPixel(i,j+1)) + (sobel_y[2][2] * img.GetPixel(i+1,j+1));
+
+            int mag = sqrt(ceil((x * x) + (y * y)));
+            cout << mag << endl;
+            img.SetPixel(i, j, mag);
+    }
+  }
+}
 
 }  // namespace ComputerVisionProjects
 
