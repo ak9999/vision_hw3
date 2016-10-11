@@ -10,12 +10,11 @@
 #include <iostream>
 #include <string>
 #include <cstdlib> // for std::atof
+#include <algorithm> // for std::max_element
 #include "image.h"
 
 using namespace std;
 using namespace ComputerVisionProjects;
-
-
 
 int main(int argc, char ** argv)
 {
@@ -36,14 +35,29 @@ int main(int argc, char ** argv)
 		cout << "Can\'t read file " << input << endl;
 		return 0;
 	}
-	
-	Image hough; // Create hough image.
-	InitBlankImage(hough, img.num_rows(), img.num_columns(), img.num_gray_levels());
 
-	if (!WriteImage(output, hough)) {
-		cout << "Can\'t write to file." << endl;
-		return 0;
-	}
+	// Get rhos and thetas.
+	vector<int> rho_values = get_rhos(img);
+	vector<double> theta_v = theta_range();
+
+	// Get diagonal
+	int diagonal = ceil( hypot(img.num_columns(), img.num_rows()) );
+
+	// Get accumulator array
+	int** accumulator = hough_accumulator(img, theta_v);
+
+	for (int i = 0; i <= 2*diagonal; i++)
+		for (size_t j = 0; j <= theta_v.size(); j++)
+			cout << accumulator[i][j] << endl;
+	
+	// Image hough; // Create hough image.
+	// InitBlankImage(hough, img.num_rows(), img.num_columns(), img.num_gray_levels());
+
+	// hough.SetNumberGrayLevels(*std::max_element(begin(accumulator), end(accumulator)));
+	// if (!WriteImage(output, hough)) {
+	// 	cout << "Can\'t write to file." << endl;
+	// 	return 0;
+	// }
 
 	return 0;
 }
