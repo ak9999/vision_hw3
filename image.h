@@ -7,6 +7,7 @@
 
 #include <cstdlib>
 #include <string>
+#include <vector>
 
 namespace ComputerVisionProjects {
  
@@ -91,7 +92,14 @@ void InitBlankImage(Image &an_image, int height, int width, int num_gray_levels)
 
 // int** HoughTransform(Image &an_image, int height, int width);
 
-void hough_line(Image &an_image);
+std::vector<double> theta_range();
+std::vector<int> get_rhos(Image &an_image);
+std::vector<int> nonzero_y(Image &an_image);
+std::vector<int> nonzero_x(Image &an_image);
+
+int** hough_accumulator(Image &an_image, std::vector<double>& thetas);
+
+Image hough_lines(int** accumulator, Image &out);
 
 }  // namespace ComputerVisionProjects
 

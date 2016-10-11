@@ -12,8 +12,8 @@
 
 #include <algorithm>
 #include <cmath>
-#include <functional>
 #include <vector>
+#include <fstream>
 
 using namespace std;
 
@@ -415,21 +415,48 @@ void InitBlankImage(Image &an_image, int height, int width, int num_gray_levels)
 
 // }
 
-void hough_line(Image &an_image)
+vector<double> theta_range()
 {
   // Theta ranges
   vector<double> thetas;
   for (int i = -90; i <= 90; i++)
     thetas.push_back(deg2rad(i));
+  return thetas;
+}
 
+vector<int> get_rhos(Image &an_image)
+{
   int width = an_image.num_columns(); int height = an_image.num_rows();
   int diagonal = hypot(height, width);
-
   // Rho ranges
   vector<int> rhos;
   for (int i = -diagonal; i < diagonal; i++)
     rhos.push_back(i);
+  return rhos;
+}
 
+vector<int> nonzero_y(Image &an_image)
+{
+  vector<int> y_indices;
+  for(int i = 0; i < an_image.num_rows(); i++)
+    for(int j = 0; j < an_image.num_columns(); j++)
+      if (an_image.GetPixel(i,j) == 1)
+        y_indices.push_back(i);
+  return y_indices;
+}
+
+vector<int> nonzero_x(Image &an_image)
+{
+  vector<int> x_indices;
+  for(int i = 0; i < an_image.num_rows(); i++)
+    for(int j = 0; j < an_image.num_columns(); j++)
+      if (an_image.GetPixel(i,j) == 1)
+        x_indices.push_back(j);
+  return x_indices;
+}
+
+int** hough_accumulator(Image &an_image, vector<double>& thetas)
+{
   // sine and cosine of thetas are reusable, keep them.
   vector<double> cos_v = thetas;
   vector<double> sin_v = thetas;
@@ -438,6 +465,38 @@ void hough_line(Image &an_image)
   int num_thetas = thetas.size();
 
   // Create the Hough accumulator array of theta and rho.
+  // Hough accumulator is 2D with height 2*diagonal and width num_thetas
+  int diagonal = ceil( hypot(an_image.num_columns(), an_image.num_rows()) );
+  int** accumulator = new int*[2*diagonal];
+  for (int i = 0; i < 2*diagonal; i++)
+  {
+    accumulator[i] = new int[num_thetas];
+    for (int j = 0; j < num_thetas; j++)
+      accumulator[i][j] = 0;
+  } // Fill it with zeroes.
+
+  // Get non-zero indices.
+  vector<int> y_indices = nonzero_y(an_image);
+  vector<int> x_indices = nonzero_x(an_image);
+  if (y_indices.size() != x_indices.size()) abort();
+
+  for (int i = 0; i < x_indices.size(); i++)
+  {
+    int x = x_indices[i];
+    int y = y_indices[i];
+
+    for (int theta = 0; theta <= num_thetas; theta++)
+    {
+      // Calculate rho. Add diagonal to ensure positive index.
+      int rho = round( x * cos_v[theta] + y * sin_v[theta] ) + diagonal;
+      accumulator[rho][theta] += 1;
+    }
+  }
+  return accumulator;
+}
+
+Image hough_lines(int** accumulator, Image &out)
+{
 
 }
 
