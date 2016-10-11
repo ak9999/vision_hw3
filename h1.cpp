@@ -2,8 +2,6 @@
  * Author: Abdullah Khan
  * h1: Locate edges and generates an "edge" image.
  *     Intensity at each edge point is proportional to edge magnitude.
- *     Use squared gradient operator or the Laplacian.
- * Challenges: Laplacian requires finding zero-crossings in the image.
  */
 
 #include <iostream>
