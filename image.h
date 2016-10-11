@@ -81,11 +81,17 @@ void DrawLine(int x0, int y0, int x1, int y1, int color,
 
 // Functions added by me
 
+double deg2rad(double degrees);
+
 void Threshold(Image &an_image, int threshold);
 
 void Sobel(Image &in, Image &out);
 
 void InitBlankImage(Image &an_image, int height, int width, int num_gray_levels);
+
+// int** HoughTransform(Image &an_image, int height, int width);
+
+void hough_line(Image &an_image);
 
 }  // namespace ComputerVisionProjects
 

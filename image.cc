@@ -9,9 +9,16 @@
 #include <cstring>
 #include <cstdio>
 #include <cstdlib>
+
+#include <algorithm>
 #include <cmath>
+#include <functional>
+#include <vector>
 
 using namespace std;
+
+// Pragmas
+#pragma GCC diagnostic ignored "-Wsign-compare"
 
 namespace ComputerVisionProjects {
 
@@ -285,6 +292,32 @@ DrawLine(int x0, int y0, int x1, int y1, int color,
 
 // Functions added by me
 
+// --------------MATH FUNCTIONS----------------------
+
+// Convert degrees to radians
+double deg2rad(double degrees) { return degrees * 4.0 * std::atan(1.0) / 180.0; }
+
+// Apply std::cos to all in vector.
+template <typename T> struct Cos : public std::unary_function<T,T>
+{
+  const T operator() (const T& x) const { return std::cos(x); }
+};
+void cosine_vector(std::vector<double>& v)
+{
+  std::transform(v.begin(), v.end(), v.begin(), Cos<double>());
+}
+
+// Apply std::sin to all in vector.
+template <typename T> struct Sin : public std::unary_function<T,T>
+{
+  const T operator() (const T& x) const { return std::sin(x); }
+};
+void sine_vector(std::vector<double>& v)
+{
+  std::transform(v.begin(), v.end(), v.begin(), Sin<double>());
+}
+// --------------------------------------------------
+
 void Threshold(Image &an_image, int threshold)
 {
   /*
@@ -342,6 +375,70 @@ void InitBlankImage(Image &an_image, int height, int width, int num_gray_levels)
   for (unsigned int i = 0; i < height; ++i) // Make an_image black.
     for (unsigned int j = 0; j < width; ++j)
       an_image.SetPixel(i, j, 0);
+}
+
+// int** HoughTransform(Image &an_image, int height, int width)
+// {
+//   // Get center of image.
+//   double center_x = width / 2.0;
+//   double center_y = height / 2.0;
+//   // Determine height of hough accumulator.
+//   int diagonal = hypot(height, width);
+//   // Create 2D accumulator array.
+//   //int accum[diagonal][180] = {}; // Fill with zeroes.
+//   int** accum = new int*[diagonal];
+
+//   for (int d = 0; d < diagonal; ++d) // Fill with zeroes.
+//   {
+//     accum[d] = new int[180];
+//     for (int w = 0; w < 180; ++w)
+//       accum[d][w] = 0;
+//   }
+
+//   for (int i = 0; i < height; ++i)
+//   {
+//     for (int j = 0; j < width; ++j)
+//     {
+//       if (an_image.GetPixel(i, j) > 0)
+//       {
+//         for (int k = 0; k < 180; k++)
+//         {
+//           // Calculate r for every theta.
+//           double r = ( (double)x - center_x ) * cos(deg2rad(k)) + ( (double)y - center_y ) * sin(deg2rad(k));
+//           accum[i][j]++;
+//         }
+//       }
+//     }
+
+//     return new int[1][1];
+//   }
+
+// }
+
+void hough_line(Image &an_image)
+{
+  // Theta ranges
+  vector<double> thetas;
+  for (int i = -90; i <= 90; i++)
+    thetas.push_back(deg2rad(i));
+
+  int width = an_image.num_columns(); int height = an_image.num_rows();
+  int diagonal = hypot(height, width);
+
+  // Rho ranges
+  vector<int> rhos;
+  for (int i = -diagonal; i < diagonal; i++)
+    rhos.push_back(i);
+
+  // sine and cosine of thetas are reusable, keep them.
+  vector<double> cos_v = thetas;
+  vector<double> sin_v = thetas;
+  cosine_vector(cos_v);
+  sine_vector(sin_v);
+  int num_thetas = thetas.size();
+
+  // Create the Hough accumulator array of theta and rho.
+
 }
 
 }  // namespace ComputerVisionProjects
