@@ -308,76 +308,30 @@ void Threshold(Image &an_image, int threshold)
   }
 } // end Threshold
 
-// Get x component of gradient of a given pixel
-// int gradient_x(Image &an_image, int x, int y)
-// {
-//   return
-//   {
-//     an_image.GetPixel(y-1, x-1) +
-//     an_image.GetPixel(y, x-1) * 2 + 
-//     an_image.GetPixel(y+1, x-1) -
-//     an_image.GetPixel(y-1, x+1) -
-//     an_image.GetPixel(y, x+1) * 2 -
-//     an_image.GetPixel(y+1, x+1)
-//   };
-// }
-
-// // Get y component of gradient of a given pixel
-// int gradient_y(Image &an_image, int x, int y)
-// {
-//   return
-//   {
-//     an_image.GetPixel(y-1, x-1) +
-//     an_image.GetPixel(y-1, x) * 2 + 
-//     an_image.GetPixel(y-1, x+1) -
-//     an_image.GetPixel(y+1, x-1) -
-//     an_image.GetPixel(y+1, x) * 2 -
-//     an_image.GetPixel(y+1, x+1)
-//   };
-// }
-
-// void Sobel(Image &an_image)
-// {
-//   int gx, gy, sum;
-//   for (unsigned int i = 2; i < an_image.num_rows()-2; ++i)
-//   {
-//     for (unsigned int j = 2; j < an_image.num_columns()-2; ++j)
-//     {
-//       gx = gradient_x(an_image, i, j);
-//       gy = gradient_y(an_image, i, j);
-//       sum = abs(gx) + abs(gy);
-//       sum = sum > 255 ? 255 : sum;
-//       sum = sum < 0 ? 0 : sum;
-//       cout << sum << endl;
-//       an_image.SetPixel(i, j, sum);
-//     }
-//   }
-// }
-
-void Sobel(Image &img, int height, int width)
+void Sobel(Image &img, Image &dst)
 {
+  int rows = img.num_rows();
+  int cols = img.num_columns();
 
-  const int sobel_x[3][3] = { {-1, 0, 1}, {-2, 0, 2}, {-1, 0, 1} };
+  float sobel_x[3][3] = { {-1, 0, 1}, {-2, 0, 2}, {-1, 0, 1} };
 
-  const int sobel_y[3][3] = { {-1, -2, -1}, {0, 0, 0}, {1, 2, 1} };
+  float sobel_y[3][3] = { {-1, -2, -1}, {0, 0, 0}, {1, 2, 1} };
 
-  for (int i = 1; i < height-2; ++i)
+  for (int i = 2; i < rows-2; ++i)
   {
-    for (int j = 1; j < width-2; ++j)
+    for (int j = 2; j < cols-2; ++j)
     {
-      int sum_x = (sobel_x[0][0] * img.GetPixel(i-1,j-1)) + (sobel_x[0][1] * img.GetPixel(i,j-1)) + (sobel_x[0][2] * img.GetPixel(i+1,j-1)) +
-                  (sobel_x[1][0] * img.GetPixel(i-1,j))   + (sobel_x[1][1] * img.GetPixel(i,j))   + (sobel_x[1][2] * img.GetPixel(i+1,j)) +
-                  (sobel_x[2][0] * img.GetPixel(i-1,j+1)) + (sobel_x[2][1] * img.GetPixel(i,j+1)) + (sobel_x[2][2] * img.GetPixel(i+1,j+1));
+      int x = (sobel_x[0][0] * img.GetPixel(i-1,j-1)) + (sobel_x[0][1] * img.GetPixel(i,j-1)) + (sobel_x[0][2] * img.GetPixel(i+1,j-1)) +
+              (sobel_x[1][0] * img.GetPixel(i-1,j))   + (sobel_x[1][1] * img.GetPixel(i,j))   + (sobel_x[1][2] * img.GetPixel(i+1,j)) +
+              (sobel_x[2][0] * img.GetPixel(i-1,j+1)) + (sobel_x[2][1] * img.GetPixel(i,j+1)) + (sobel_x[2][2] * img.GetPixel(i+1,j+1));
 
-      int sum_y = (sobel_y[0][0] * img.GetPixel(i-1,j-1)) + (sobel_y[0][1] * img.GetPixel(i,j-1)) + (sobel_y[0][2] * img.GetPixel(i+1,j-1)) +
-                  (sobel_y[1][0] * img.GetPixel(i-1,j))   + (sobel_y[1][1] * img.GetPixel(i,j))   + (sobel_y[1][2] * img.GetPixel(i+1,j)) +
-                  (sobel_y[2][0] * img.GetPixel(i-1,j+1)) + (sobel_y[2][1] * img.GetPixel(i,j+1)) + (sobel_y[2][2] * img.GetPixel(i+1,j+1));
+      int y = (sobel_y[0][0] * img.GetPixel(i-1,j-1)) + (sobel_y[0][1] * img.GetPixel(i,j-1)) + (sobel_y[0][2] * img.GetPixel(i+1,j-1)) +
+              (sobel_y[1][0] * img.GetPixel(i-1,j))   + (sobel_y[1][1] * img.GetPixel(i,j))   + (sobel_y[1][2] * img.GetPixel(i+1,j)) +
+              (sobel_y[2][0] * img.GetPixel(i-1,j+1)) + (sobel_y[2][1] * img.GetPixel(i,j+1)) + (sobel_y[2][2] * img.GetPixel(i+1,j+1));
 
-      sum_x = abs(sum_x);
-      sum_y = abs(sum_y);
-      int mag = sqrt(ceil((sum_x * sum_x) + (sum_y * sum_y)));
-      cout << mag << endl;
-      img.SetPixel(i, j, mag);
+      int mag = ceil( hypot(x, y) );
+      //cout << mag << endl;
+      dst.SetPixel(i, j, mag);
     }
   }
 }
