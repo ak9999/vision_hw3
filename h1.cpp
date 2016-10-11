@@ -41,7 +41,9 @@ int main(int argc, char ** argv)
 		for (unsigned int j = 0; j < dst.num_columns(); ++j)
 			dst.SetPixel(i, j, 0);
 
-	//Sobel(img, img.num_rows(), img.num_columns());
+	Sobel(img, dst);
+
+	
 
 	if (!WriteImage(output, dst)) {
 		cout << "Can\'t write to file." << endl;
