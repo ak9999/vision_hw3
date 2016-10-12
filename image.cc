@@ -365,25 +365,27 @@ void Sobel(Image &in, Image &out)
       out.SetPixel(i, j, magnitude);
     }
   }
-}
+} // end Sobel operator
 
+// Creates a black image.
 void InitBlankImage(Image &an_image, int height, int width, int num_gray_levels)
 {
   an_image.SetNumberGrayLevels(num_gray_levels);
   an_image.AllocateSpaceAndSetSize(height, width);
-  for (unsigned int i = 0; i < height; ++i) // Make an_image black.
+  for (unsigned int i = 0; i < height; ++i)
     for (unsigned int j = 0; j < width; ++j)
       an_image.SetPixel(i, j, 0);
-}
+} // end InitBlankImage
 
+// Create a vector of theta values in radians.
 vector<double> theta_range()
 {
-  // Theta ranges
   vector<double> thetas;
+  // From -90 to 90 degrees
   for (int i = -90; i <= 90; i++)
-    thetas.push_back(deg2rad(i));
+    thetas.push_back(deg2rad(i)); // Convert to radians then push back.
   return thetas;
-}
+} // end theta_range
 
 vector<int> get_rhos(Image &an_image)
 {
@@ -418,6 +420,7 @@ vector<int> nonzero_x(Image &an_image)
 
 int** hough_accumulator(Image &an_image, vector<double>& thetas)
 {
+  // All elements in thetas are in radians already.
   // sine and cosine of thetas are reusable, keep them.
   vector<double> cos_v = thetas;
   vector<double> sin_v = thetas;
@@ -426,10 +429,10 @@ int** hough_accumulator(Image &an_image, vector<double>& thetas)
   int num_thetas = thetas.size();
 
   // Create the Hough accumulator array of theta and rho.
-  // Hough accumulator is 2D with height 2*diagonal and width num_thetas
+  // Hough accumulator is 2D with height diagonal and width num_thetas
   int diagonal = ceil( hypot(an_image.num_columns(), an_image.num_rows()) );
-  int** accumulator = new int*[2*diagonal];
-  for (int i = 0; i < 2*diagonal; i++)
+  int** accumulator = new int*[diagonal];
+  for (int i = 0; i < diagonal; i++)
   {
     accumulator[i] = new int[num_thetas];
     for (int j = 0; j < num_thetas; j++)
@@ -439,7 +442,7 @@ int** hough_accumulator(Image &an_image, vector<double>& thetas)
   // Get non-zero indices.
   vector<int> y_indices = nonzero_y(an_image);
   vector<int> x_indices = nonzero_x(an_image);
-  if (y_indices.size() != x_indices.size()) abort();
+  if (y_indices.size() != x_indices.size()) abort(); // Should never execute.
 
   for (int i = 0; i < x_indices.size(); i++)
   {
@@ -448,9 +451,9 @@ int** hough_accumulator(Image &an_image, vector<double>& thetas)
 
     for (int theta = 0; theta <= num_thetas; theta++)
     {
-      // Calculate rho. Add diagonal to ensure positive index.
-      int rho = round( x * cos_v[theta] + y * sin_v[theta] ) + diagonal;
-      accumulator[rho][theta] += 1;
+      // Calculate rho.
+      int rho = round( x * cos_v[theta] + y * sin_v[theta] );
+      if (rho >= 0 && rho < diagonal) accumulator[rho][theta] += 1;
     }
   }
   return accumulator;
@@ -458,13 +461,12 @@ int** hough_accumulator(Image &an_image, vector<double>& thetas)
 
 void hough_space(int** accumulator, Image &out)
 {
-  int height = out.num_rows(); int width = out.num_columns();
-  int diagonal = ceil( hypot(height, width) );
-
-  out.AllocateSpaceAndSetSize(2*diagonal, 180);
+  int diagonal = ceil( hypot(out.num_rows(), out.num_columns()) );
+  out.AllocateSpaceAndSetSize(diagonal, 181);
   out.SetNumberGrayLevels(255);
-  for (int i = 0; i < 2*diagonal; i++)
-    for (int j = 0; j < 180; j++)
+
+  for (int i = 0; i < diagonal; i++)
+    for (int j = 0; j < 181; j++)
       out.SetPixel(i, j, accumulator[i][j]);
 }
 
