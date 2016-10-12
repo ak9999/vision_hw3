@@ -11,6 +11,7 @@
 #include <string>
 #include <cstdlib> // for std::atof
 #include <algorithm> // for std::max_element
+#include <fstream>
 #include "image.h"
 
 using namespace std;
@@ -46,18 +47,23 @@ int main(int argc, char ** argv)
 	// Get accumulator array
 	int** accumulator = hough_accumulator(img, theta_v);
 
-	for (int i = 0; i <= 2*diagonal; i++)
-		for (size_t j = 0; j <= theta_v.size(); j++)
-			cout << accumulator[i][j] << endl;
+	{
+		fstream of(votingarray, std::ios::out);
+		if (!of.is_open()) abort();
+		for (int i = 0; i < 2*diagonal; i++)
+			for (size_t j = 0; j < theta_v.size(); j++)
+				of << accumulator[i][j] << endl;
+		of.close();
+	} // Write accumulator array to file.
 	
-	// Image hough; // Create hough image.
-	// InitBlankImage(hough, img.num_rows(), img.num_columns(), img.num_gray_levels());
+	Image hough; // Create hough image.
+	InitBlankImage(hough, img.num_rows(), img.num_columns(), img.num_gray_levels());
 
-	// hough.SetNumberGrayLevels(*std::max_element(begin(accumulator), end(accumulator)));
-	// if (!WriteImage(output, hough)) {
-	// 	cout << "Can\'t write to file." << endl;
-	// 	return 0;
-	// }
+	hough.SetNumberGrayLevels(255);
+	if (!WriteImage(output, hough)) {
+		cout << "Can\'t write to file." << endl;
+		return 0;
+	}
 
 	return 0;
 }
