@@ -37,8 +37,7 @@ int main(int argc, char ** argv)
 		return 0;
 	}
 
-	// Get rhos and thetas.
-	vector<int> rho_values = get_rhos(img);
+	// Get thetas
 	vector<double> theta_v = theta_range();
 
 	// Get diagonal
@@ -46,20 +45,21 @@ int main(int argc, char ** argv)
 
 	// Get accumulator array
 	int** accumulator = hough_accumulator(img, theta_v);
+	cout << "Obtained Hough accumulator array!" << endl;
 
 	{
 		fstream of(votingarray, std::ios::out);
 		if (!of.is_open()) abort();
-		of << 2*diagonal << " " << theta_v.size() << endl;
-		for (int i = 0; i < 2*diagonal; i++)
+		of << diagonal << " " << theta_v.size() << endl;
+		for (int i = 0; i < diagonal; i++)
 			for (size_t j = 0; j < theta_v.size(); j++)
 				of << accumulator[i][j] << endl;
 		of.close();
+		cout << "Hough accumulator array has been written to file: " << votingarray << endl;
 	} // Write accumulator array to file.
 	
 	Image hough; // Create hough image.
 	InitBlankImage(hough, img.num_rows(), img.num_columns(), img.num_gray_levels());
-
 	hough_space(accumulator, hough);
 
 	if (!WriteImage(output, hough)) {
@@ -67,5 +67,7 @@ int main(int argc, char ** argv)
 		return 0;
 	}
 
+	cout << "Hough space image saved as: " << output << "\nDimensions: "
+		 << hough.num_rows() << "x" << hough.num_columns() << endl;
 	return 0;
 }
