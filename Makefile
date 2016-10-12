@@ -49,16 +49,19 @@ package:
 	(zip KHAN_HW3.zip *.h *.cc *.cpp Makefile README.txt)
 
 output_simple_1:
+	make clean_images
 	./h1 hough_simple_1.pgm edge_simple_1.pgm
 	./h2 edge_simple_1.pgm 150 binary_simple_1.pgm
 	./h3 binary_simple_1.pgm h3output_simple_1.pgm array.txt
 
 output_simple_2:
+	make clean_images
 	./h1 hough_simple_2.pgm edge_simple_2.pgm
 	./h2 edge_simple_2.pgm 150 binary_simple_2.pgm
 	./h3 binary_simple_2.pgm h3output_simple_2.pgm array.txt
 
 output_complex_1:
+	make clean_images
 	./h1 hough_complex_1.pgm edge_complex.pgm
 	./h2 edge_complex.pgm 150 binary_complex.pgm
 	./h3 binary_complex.pgm h3output_complex.pgm array.txt
@@ -76,3 +79,4 @@ clean:
 	(rm -f h2;)
 	(rm -f h3;)
 	(rm -f h4;)
+	make clean_images
