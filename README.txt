@@ -22,10 +22,10 @@ None.
 
 III. Run Instructions
 	- Run `make` to build
-		- ./h1 {input gray-level image} {output gray-level edge image}
-		- ./h2 {input gray-level image} {input gray-level threshold} {output binary image}
-		- ./h3 {input binary edge image} {output gray-level Hough image} {output Hough-voting-array}
-		- ./h4 {input original gray-level image} {input Hough-voting-array} {input Hough threshold value} {output gray-level line image}
+	- ./h1 {input gray-level image} {output gray-level edge image}
+	- ./h2 {input gray-level image} {input gray-level threshold} {output binary image}
+	- ./h3 {input binary edge image} {output gray-level Hough image} {output Hough-voting-array}
+	- ./h4 {input original gray-level image} {input Hough-voting-array} {input Hough threshold value} {output gray-level line image}
 
 	If you want to quickly run all the programs and look at results, take a look at the following recipes:
 		output_simple_1
