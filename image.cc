@@ -456,9 +456,16 @@ int** hough_accumulator(Image &an_image, vector<double>& thetas)
   return accumulator;
 }
 
-Image hough_lines(int** accumulator, Image &out)
+void hough_space(int** accumulator, Image &out)
 {
+  int height = out.num_rows(); int width = out.num_columns();
+  int diagonal = ceil( hypot(height, width) );
 
+  out.AllocateSpaceAndSetSize(2*diagonal, 180);
+  out.SetNumberGrayLevels(255);
+  for (int i = 0; i < 2*diagonal; i++)
+    for (int j = 0; j < 180; j++)
+      out.SetPixel(i, j, accumulator[i][j]);
 }
 
 }  // namespace ComputerVisionProjects

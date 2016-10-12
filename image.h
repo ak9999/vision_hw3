@@ -99,7 +99,7 @@ std::vector<int> nonzero_x(Image &an_image);
 
 int** hough_accumulator(Image &an_image, std::vector<double>& thetas);
 
-Image hough_lines(int** accumulator, Image &out);
+void hough_space(int** accumulator, Image &out);
 
 }  // namespace ComputerVisionProjects
 
