@@ -12,26 +12,27 @@ Purpose:        Homework #3
 ## Series of programs to recognize lines in an image using the Hough Transform.
 
 I. Parts Completed
-	- h1
-	- h2
-	- h3
+- h1
+- h2
+- h3
 
 
 II. Bugs Encountered
 None.
 
 III. Run Instructions
-	- Run `make` to build
-	- ./h1 {input gray-level image} {output gray-level edge image}
-	- ./h2 {input gray-level image} {input gray-level threshold} {output binary image}
-	- ./h3 {input binary edge image} {output gray-level Hough image} {output Hough-voting-array}
-	- ./h4 {input original gray-level image} {input Hough-voting-array} {input Hough threshold value} {output gray-level line image}
+- Run `make` to build
+- ./h1 {input gray-level image} {output gray-level edge image}
+- ./h2 {input gray-level image} {input gray-level threshold} {output binary image}
+- ./h3 {input binary edge image} {output gray-level Hough image} {output Hough-voting-array}
+- ./h4 {input original gray-level image} {input Hough-voting-array} {input Hough threshold value} {output gray-level line image}
 
-	If you want to quickly run all the programs and look at results, take a look at the following recipes:
-		output_simple_1
-		output_simple_2
-		output_complex_1
-	Run `make {recipe}` to run the tests.
+If you want to quickly run all the programs and look at results, take a look at the following recipes:
+	output_simple_1
+	output_simple_2
+	output_complex_1
+
+Run `make {recipe}` to run the tests.
 
 IV. Input and Output Files
 	User's PGM images.
