@@ -59,7 +59,8 @@ int main(int argc, char ** argv)
 	Image hough; // Create hough image.
 	InitBlankImage(hough, img.num_rows(), img.num_columns(), img.num_gray_levels());
 
-	hough.SetNumberGrayLevels(255);
+	hough_space(accumulator, hough);
+
 	if (!WriteImage(output, hough)) {
 		cout << "Can\'t write to file." << endl;
 		return 0;
