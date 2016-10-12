@@ -50,6 +50,7 @@ int main(int argc, char ** argv)
 	{
 		fstream of(votingarray, std::ios::out);
 		if (!of.is_open()) abort();
+		of << 2*diagonal << " " << theta_v.size() << endl;
 		for (int i = 0; i < 2*diagonal; i++)
 			for (size_t j = 0; j < theta_v.size(); j++)
 				of << accumulator[i][j] << endl;
