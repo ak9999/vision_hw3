@@ -376,44 +376,6 @@ void InitBlankImage(Image &an_image, int height, int width, int num_gray_levels)
       an_image.SetPixel(i, j, 0);
 }
 
-// int** HoughTransform(Image &an_image, int height, int width)
-// {
-//   // Get center of image.
-//   double center_x = width / 2.0;
-//   double center_y = height / 2.0;
-//   // Determine height of hough accumulator.
-//   int diagonal = hypot(height, width);
-//   // Create 2D accumulator array.
-//   //int accum[diagonal][180] = {}; // Fill with zeroes.
-//   int** accum = new int*[diagonal];
-
-//   for (int d = 0; d < diagonal; ++d) // Fill with zeroes.
-//   {
-//     accum[d] = new int[180];
-//     for (int w = 0; w < 180; ++w)
-//       accum[d][w] = 0;
-//   }
-
-//   for (int i = 0; i < height; ++i)
-//   {
-//     for (int j = 0; j < width; ++j)
-//     {
-//       if (an_image.GetPixel(i, j) > 0)
-//       {
-//         for (int k = 0; k < 180; k++)
-//         {
-//           // Calculate r for every theta.
-//           double r = ( (double)x - center_x ) * cos(deg2rad(k)) + ( (double)y - center_y ) * sin(deg2rad(k));
-//           accum[i][j]++;
-//         }
-//       }
-//     }
-
-//     return new int[1][1];
-//   }
-
-// }
-
 vector<double> theta_range()
 {
   // Theta ranges
@@ -500,10 +462,3 @@ Image hough_lines(int** accumulator, Image &out)
 }
 
 }  // namespace ComputerVisionProjects
-
-
-
-
-
-
-
