@@ -8,20 +8,10 @@
 #include <cstdlib>
 #include <string>
 #include <vector>
+#include <fstream>
 
 namespace ComputerVisionProjects {
- 
-// Class for representing a gray-scale image.
-// Sample usage:
-//   Image one_image;
-//   one_image.AllocateSpaceAndSetSize(100, 200);
-//   one_image.SetNumberGrayLevels(255);
-//   // Creates and image such that each pixel is 150.
-//   for (int i = 0; i < 100; ++i)
-//     for (int j = 0; j < 200; ++j)
-//       one_image.SetPixel(i, j, 150);
-//   WriteImage("output_file.pgm", an_image);
-//   // See image_demo.cc for read/write image.
+
 class Image {
  public:
   Image(): num_rows_{0}, num_columns_{0}, 
@@ -100,6 +90,8 @@ std::vector<int> nonzero_x(Image &an_image);
 int** hough_accumulator(Image &an_image, std::vector<double>& thetas);
 
 void hough_space(int** accumulator, Image &out);
+
+int** read_hough_space(std::fstream fs);
 
 }  // namespace ComputerVisionProjects
 
