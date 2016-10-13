@@ -32,6 +32,8 @@ int main(int argc, char ** argv)
 		return 0;
 	}
 
+	// code
+
 	if (!WriteImage(output, img)) {
 		cout << "Can\'t write to file." << endl;
 		return 0;
