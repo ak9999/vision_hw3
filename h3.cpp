@@ -49,7 +49,12 @@ int main(int argc, char ** argv)
 
 	{
 		fstream of(votingarray, std::ios::out);
-		if (!of.is_open()) abort();
+		if (!of.is_open())
+		{
+			cout << "Could not open " << votingarray << " for writing. Abort." << endl;
+			abort();
+		}
+		
 		of << diagonal << " " << theta_v.size() << endl;
 		for (int i = 0; i < diagonal; i++)
 			for (size_t j = 0; j < theta_v.size(); j++)
