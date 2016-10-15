@@ -52,10 +52,11 @@ int main(int argc, char ** argv)
 		if (!of.is_open())
 		{
 			cout << "Could not open " << votingarray << " for writing. Abort." << endl;
-			abort();
+			return 0;
 		}
 		
-		of << diagonal << " " << theta_v.size() << endl;
+		of << diagonal << endl;
+		of << theta_v.size() << endl;
 		for (int i = 0; i < diagonal; i++)
 			for (size_t j = 0; j < theta_v.size(); j++)
 				of << accumulator[i][j] << endl;
@@ -74,5 +75,6 @@ int main(int argc, char ** argv)
 
 	cout << "Hough space image saved as: " << output << "\nDimensions: "
 		 << hough.num_rows() << "x" << hough.num_columns() << endl;
+	cout << "First two lines of " << votingarray << " are dimensions." << endl;
 	return 0;
 }
