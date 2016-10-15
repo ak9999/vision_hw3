@@ -533,106 +533,41 @@ void label_image(Image &an_image)
       labels.insert(an_image.GetPixel(i, j));
 }
 
-std::vector<std::pair<std::pair<int, int>, std::pair<int, int>>> GetLines(std::vector<std::pair<int,int>> lines, int img_h, int img_w, int threshold)
+// std::vector<std::pair<std::pair<int, int>, std::pair<int, int>>> GetLines(std::vector<std::pair<int,int>> lines, Image &an_image, int threshold)
+void GetLines(std::vector<std::pair<int,int>> lines, Image &an_image)
 {
-  std::vector<std::pair<std::pair<int, int>, std::pair<int, int>>> pairs;
+  // std::vector<std::pair<std::pair<int, int>, std::pair<int, int>>> pairs;
+  int height = an_image.num_rows();
+  int width = an_image.num_columns();
 
-  for (auto rho_theta : lines)
+  cout << "Height: " << height << endl;
+  cout << "Width: " << width << endl;
+
+  int x0 = 0;
+  int y0 = 0;
+  int x1 = height;
+  int y1 = 0;
+  for (size_t i = 0; i < lines.size(); i++)
   {
-    int img_center_y = img_h / 2;
-    int img_center_x = img_w / 2;
-
-    auto current_line = rho_theta;
+    auto current_line = lines[i];
     int theta = current_line.second;
     int rho = current_line.first;
 
-    int x0 = 0;
-    int y0 = round( (float)(rho - (float)((x0 * cos(deg2rad(theta))))) / sin(deg2rad(theta)) );
+    y0 = (rho - (x0 * cos(deg2rad(theta))) / sin(theta));
+    y1 = (rho - (x1 * cos(deg2rad(theta))) / sin(theta));
 
-    int x1 = img_h;
-    int y1 = round( (float)(rho - (float)((x1 * cos(deg2rad(theta))))) / sin(deg2rad(theta)) );
-
-    int y2 = 0;
-    int x2 = round( (float)(rho - (float)((y2 * sin(deg2rad(theta))))) / cos(deg2rad(theta)) );
-
-    int y3 = img_w;
-    int x3 = round( (float)(rho - (float)((y3 * sin(deg2rad(theta))))) / cos(deg2rad(theta)) );
-
-    int x4 = img_center_y;
-    int y4 = round( (float)(rho - (float)((x4 * cos(deg2rad(theta))))) / sin(deg2rad(theta)) );
-
-    int y5 = img_center_x;
-    int x5 = round( (float)(rho - (float)((y5 * sin(deg2rad(theta))))) / cos(deg2rad(theta)) );
-
-    // Get points
-    auto p0 = make_pair(x0, y0);
-    auto p1 = make_pair(x1, y1);
-    auto p2 = make_pair(x2, y2);
-    auto p3 = make_pair(x3, y3);
-    auto p4 = make_pair(x4, y4);
-    auto p5 = make_pair(x5, y5);
-
-    auto l1 = make_pair(p0, p1);
-    auto l2 = make_pair(p2, p3);
-    auto l3 = make_pair(p4, p5);
-
-    if ( (y0 >= 0 && y0 <= img_w) && (y1 >= 0 && y1 <= img_w) )
+    if
+    (
+        x0 >= 0 && x0 <= height &&
+        x1 >= 0 && x1 <= height &&
+        y0 >= 0 && y0 <= width &&
+        y1 >= 0 && y1 <= width
+    )
     {
-      pairs.push_back(l1);
-    }
-    if ( (x2 >= 0 && x2 <= img_h) && (x3 >= 0 && x3 <= img_h) )
-    {
-      pairs.push_back(l2);
-    }
-    if ( (y4 >= 0 && y4 <= img_w) && (x5 >= 0 && x5 <= img_h) )
-    {
-      pairs.push_back(l3);
+      DrawLine(x0, y0, x1, y1, 255, &an_image);
+      // cout << "(" << x0 << "," << y0 << ")" << " to " << "(" << x1 << "," << y1 << ")" << endl;
     }
   }
-
-  // int x0, y0, x1, y1;
-
-  // for (int i = 0; i < accum_h; i++)
-  // {
-  //   for (int j = 0; j < accum_w; j++)
-  //   {
-  //     int current = accum[i][j];
-  //     if (current > threshold)
-  //     {
-  //       int north = i-1; int south = i+1;
-  //       int west = j-1; int east = j+1;
-  //       if ( (north >= 0 && west >= 0) && (east <= accum_w && south <= accum_h) )
-  //       {
-  //         if (current < accum[north][west]) continue;
-  //         else if (current < accum[north][east]) continue;
-  //         else if (current < accum[north][j]) continue;
-  //         else if (current < accum[south][j]) continue;
-  //         else if (current < accum[south][east]) continue;
-  //         else if (current < accum[south][west]) continue;
-  //         else if (current < accum[i][west]) continue;
-  //         else if (current < accum[i][east]) continue;
-  //         else // If current is local maxima
-  //         {
-  //           // Start converting to cartesian coordinates
-  //           // y = ( j - x*cos(i) ) / sin(i)
-  //           // x = ( j - y*sin(i) ) / cos(i)
-  //           // where i and j are rho and theta, respectively.
-  //           y0 = 0;
-  //           x0 = (i - (y0 * sin(deg2rad(j))) / cos(deg2rad(j)));
-  //           y0 = (i - (x0 * cos(deg2rad(j))) / sin(deg2rad(j)));
-
-  //           y1 = img_w;
-  //           x1 = (i - (y1 * sin(deg2rad(j))) / cos(deg2rad(j)));
-  //           y1 = (i - (x1 * cos(deg2rad(j))) / sin(deg2rad(j)));
-  //           auto p0 = std::pair<int,int>(x0, y0); auto p1 = std::pair<int,int>(x1, y1);
-  //           auto points = std::make_pair(p0, p1);
-  //           pairs.push_back(points);
-  //         }
-  //       }
-  //     }
-  //   }
-  // }
-  return pairs;
 }
 
 }  // namespace ComputerVisionProjects

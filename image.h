@@ -93,7 +93,8 @@ void hough_space(int** accumulator, Image &out);
 
 void label_image(Image &an_image);
 
-std::vector<std::pair<std::pair<int, int>, std::pair<int, int>>> GetLines(std::vector<std::pair<int,int>> lines, int img_h, int img_w, int threshold);
+// std::vector<Line> GetLines(std::vector<std::pair<int,int>> lines, int img_h, int img_w, int threshold);
+void GetLines(std::vector<std::pair<int,int>> lines, Image &an_image);
 
 }  // namespace ComputerVisionProjects
 
