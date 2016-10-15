@@ -15,10 +15,11 @@ I. Parts Completed
 - h1
 - h2
 - h3
+- h4 does not draw lines appropriately.
 
 
 II. Bugs Encountered
-None.
+h4 is broken.
 
 III. Run Instructions
 - Run `make` to build
@@ -31,6 +32,7 @@ If you want to quickly run all the programs and look at results, take a look at 
 	output_simple_1
 	output_simple_2
 	output_complex_1
+If you use these recipes you don't get to pick what your thresholds or output file names are.
 
 Run `make {recipe}` to run the tests.
 
