@@ -31,7 +31,7 @@ PROGRAM2=h2
 PROGRAM3=h3
 PROGRAM4=h4
 
-THRESHOLD=50
+THRESHOLD=80
 BINARY_THRESHOLD=50
 
 all: $(PROGRAM1) $(PROGRAM2) $(PROGRAM3) $(PROGRAM4)
@@ -51,21 +51,21 @@ $(PROGRAM4): $(h4_obj)
 package:
 	(zip KHAN_HW3.zip *.h *.cc *.cpp Makefile README.txt)
 
-output_simple_1:
+simple_1:
 	make remove_data
 	./h1 hough_simple_1.pgm edge_simple_1.pgm
 	./h2 edge_simple_1.pgm $(BINARY_THRESHOLD) binary_simple_1.pgm
 	./h3 binary_simple_1.pgm h3output_simple_1.pgm array.txt
 	./h4 hough_simple_1.pgm array.txt $(THRESHOLD) lines.pgm
 
-output_simple_2:
+simple_2:
 	make remove_data
 	./h1 hough_simple_2.pgm edge_simple_2.pgm
 	./h2 edge_simple_2.pgm $(BINARY_THRESHOLD) binary_simple_2.pgm
 	./h3 binary_simple_2.pgm h3output_simple_2.pgm array.txt
 	./h4 hough_simple_2.pgm array.txt $(THRESHOLD) lines.pgm
 
-output_complex_1:
+complex_1:
 	make remove_data
 	./h1 hough_complex_1.pgm edge_complex.pgm
 	./h2 edge_complex.pgm $(BINARY_THRESHOLD) binary_complex.pgm
