@@ -31,8 +31,8 @@ PROGRAM2=h2
 PROGRAM3=h3
 PROGRAM4=h4
 
-THRESHOLD=150
-BINARY_THRESHOLD=50
+THRESHOLD=180
+BINARY_THRESHOLD=100
 
 all: $(PROGRAM1) $(PROGRAM2) $(PROGRAM3) $(PROGRAM4)
 
@@ -57,7 +57,6 @@ simple_1:
 	./h2 edge_simple_1.pgm $(BINARY_THRESHOLD) binary_simple_1.pgm
 	./h3 binary_simple_1.pgm h3output_simple_1.pgm array.txt
 	./h4 hough_simple_1.pgm array.txt $(THRESHOLD) lines.pgm
-	convert lines.pgm lines.jpg
 
 simple_2:
 	make remove_data
@@ -65,7 +64,6 @@ simple_2:
 	./h2 edge_simple_2.pgm $(BINARY_THRESHOLD) binary_simple_2.pgm
 	./h3 binary_simple_2.pgm h3output_simple_2.pgm array.txt
 	./h4 hough_simple_2.pgm array.txt $(THRESHOLD) lines.pgm
-	convert lines.pgm lines.jpg
 
 complex_1:
 	make remove_data
@@ -73,7 +71,6 @@ complex_1:
 	./h2 edge_complex.pgm $(BINARY_THRESHOLD) binary_complex.pgm
 	./h3 binary_complex.pgm h3output_complex.pgm array.txt
 	./h4 hough_complex_1.pgm array.txt $(THRESHOLD) lines.pgm
-	convert lines.pgm lines.jpg
 
 remove_data:
 	(rm -f edge_*.pgm)
@@ -81,8 +78,6 @@ remove_data:
 	(rm -f h3output_*.pgm)
 	(rm -f array.txt)
 	(rm -f lines.pgm)
-	(rm -f *.jpg)
-
 
 clean:
 	(rm -f *.o;)
