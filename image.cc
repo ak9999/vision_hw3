@@ -349,21 +349,21 @@ void Sobel(Image &in, Image &out)
   int rows = in.num_rows();
   int cols = in.num_columns();
 
+  const float scale = 1.0/2.0;
   float sobel_x[3][3] = { {-1, 0, 1}, {-2, 0, 2}, {-1, 0, 1} };
-
   float sobel_y[3][3] = { {-1, -2, -1}, {0, 0, 0}, {1, 2, 1} };
 
   for (int i = 2; i < rows-2; ++i)
   {
     for (int j = 2; j < cols-2; ++j)
     {
-      int x = (sobel_x[0][0] * in.GetPixel(i-1,j-1)) + (sobel_x[0][1] * in.GetPixel(i,j-1)) + (sobel_x[0][2] * in.GetPixel(i+1,j-1)) +
-              (sobel_x[1][0] * in.GetPixel(i-1,j))   + (sobel_x[1][1] * in.GetPixel(i,j))   + (sobel_x[1][2] * in.GetPixel(i+1,j)) +
-              (sobel_x[2][0] * in.GetPixel(i-1,j+1)) + (sobel_x[2][1] * in.GetPixel(i,j+1)) + (sobel_x[2][2] * in.GetPixel(i+1,j+1));
+      int x = ((scale * sobel_x[0][0]) * in.GetPixel(i-1,j-1)) + ((scale * sobel_x[0][1]) * in.GetPixel(i,j-1)) + ((scale * sobel_x[0][2]) * in.GetPixel(i+1,j-1)) +
+              ((scale * sobel_x[1][0]) * in.GetPixel(i-1,j))   + ((scale * sobel_x[1][1]) * in.GetPixel(i,j))   + ((scale * sobel_x[1][2]) * in.GetPixel(i+1,j)) +
+              ((scale * sobel_x[2][0]) * in.GetPixel(i-1,j+1)) + ((scale * sobel_x[2][1]) * in.GetPixel(i,j+1)) + ((scale * sobel_x[2][2]) * in.GetPixel(i+1,j+1));
 
-      int y = (sobel_y[0][0] * in.GetPixel(i-1,j-1)) + (sobel_y[0][1] * in.GetPixel(i,j-1)) + (sobel_y[0][2] * in.GetPixel(i+1,j-1)) +
-              (sobel_y[1][0] * in.GetPixel(i-1,j))   + (sobel_y[1][1] * in.GetPixel(i,j))   + (sobel_y[1][2] * in.GetPixel(i+1,j)) +
-              (sobel_y[2][0] * in.GetPixel(i-1,j+1)) + (sobel_y[2][1] * in.GetPixel(i,j+1)) + (sobel_y[2][2] * in.GetPixel(i+1,j+1));
+      int y = ((scale * sobel_y[0][0]) * in.GetPixel(i-1,j-1)) + ((scale * sobel_y[0][1]) * in.GetPixel(i,j-1)) + ((scale * sobel_y[0][2]) * in.GetPixel(i+1,j-1)) +
+              ((scale * sobel_y[1][0]) * in.GetPixel(i-1,j))   + ((scale * sobel_y[1][1]) * in.GetPixel(i,j))   + ((scale * sobel_y[1][2]) * in.GetPixel(i+1,j)) +
+              ((scale * sobel_y[2][0]) * in.GetPixel(i-1,j+1)) + ((scale * sobel_y[2][1]) * in.GetPixel(i,j+1)) + ((scale * sobel_y[2][2]) * in.GetPixel(i+1,j+1));
 
       int magnitude = ceil( hypot(x, y) );
       out.SetPixel(i, j, magnitude);
@@ -524,95 +524,115 @@ void label_image(Image &an_image)
       an_image.SetPixel(i, j, ds.Find(an_image.GetPixel(i, j)));
     }
   }
-
   an_image.SetNumberGrayLevels(min(255, label));
-
-  for (int i = 0; i < rows; i++)
-  {
-    for (int j = 0; j < cols; j++)
-    {
-      if (an_image.GetPixel(i, j) == 0)
-        an_image.SetPixel(i, j, 255);
-    }
-  }
 
   set<int> labels;
 
   for (int i = 0; i < rows; i++)
     for (int j = 0; j < cols; j++)
       labels.insert(an_image.GetPixel(i, j));
-
-  // cout << "Size: " << labels.size() << endl;
-  // for (auto &s : labels)
-  //   cout << s << endl;
-
-  //cout << "The resulting image should have " << labels.size() - 1  << " objects." << endl;
 }
 
-// A vector of pairs of std::pairs
-// std::vector<std::pair<std::pair<int, int>, std::pair<int, int>>> GetLines(int **accum, int accum_h, int accum_w, int img_h, int img_w, int threshold)
-// {
-//   std::vector<std::pair<std::pair<int, int>, std::pair<int, int>>> lines;
+std::vector<std::pair<std::pair<int, int>, std::pair<int, int>>> GetLines(std::vector<std::pair<int,int>> lines, int img_h, int img_w, int threshold)
+{
+  std::vector<std::pair<std::pair<int, int>, std::pair<int, int>>> pairs;
 
-//   float accum_center_x = accum_w / 2.0;
-//   float accum_center_y = accum_h / 2.0;
-//   float img_center_x = img_w / 2.0;
-//   float img_center_y = img_h / 2.0;
+  for (auto rho_theta : lines)
+  {
+    int img_center_y = img_h / 2;
+    int img_center_x = img_w / 2;
 
-//   for (int i = 0; i < accum_h; i++)
-//   {
-//     for (int j = 0; j < accum_w; j++)
-//     {
-//       if (accum[i][j] >= threshold)
-//       {
-//         // Check local maxima
-//         int max = accum[i][j];
-//         for (int ly = -2; ly <= 2; ly++)
-//         {
-//           for (int lx = -2; lx <= 2; lx++)
-//           {
-//             if ( ( (ly + i) >= 0 ) && ((ly + i) < accum_h) && ( (lx + j) >= 0 && (lx + j) < accum_w ) )
-//             {
-//               if ( accum[i+ly][j+lx] > max)
-//               {
-//                 max = accum[i+ly][j+lx];
-//                 ly = 3; lx = 3; // Break out of the loop if we find a new max.
-//               }
-//             }
-//           }
-//         }
-//         if (max > accum[i][j]) continue;
+    auto current_line = rho_theta;
+    int theta = current_line.second;
+    int rho = current_line.first;
 
-//         // Get coordinates
-//         int x0, y0, x1, y1; // Initialize
-//         x0 = x1 = y0 = y1 = 0; // Assignment.
+    int x0 = 0;
+    int y0 = round( (float)(rho - (float)((x0 * cos(deg2rad(theta))))) / sin(deg2rad(theta)) );
 
-//         // Start converting to cartesian coordinates
-//         // y = ( j - x*cos(i) ) / sin(i)
-//         // x = ( j - y*sin(i) ) / cos(i)
-//         // where i and j are rho and theta, respectively.
-//         if (j >= 45 && j <= 135)
-//         {
-//           x0 = 0;
-//           y0 = floor( ( (float)( (i - accum_center_y) - (x0 - img_center_x) ) * cos(deg2rad(j)) ) / (sin(deg2rad(j)) + (img_center_y)) );
-//           x1 = img_w - 0;
-//           y1 = floor( ( (float)( (i - accum_center_y) - (x1 - img_center_x) ) * cos(deg2rad(j)) ) / (sin(deg2rad(j)) + (img_center_y)) );
-//         }
-//         else
-//         {
-//           y0 = 0;
-//           x0 = floor( ( (float)( (i - accum_center_y) - (y0 - img_center_y) ) * sin(deg2rad(j)) ) / (cos(deg2rad(j)) + (img_center_x)) );
-//           y1 = img_h - 0;
-//           x1 = floor( ( (float)( (i - accum_center_y) - (y1 - img_center_y) ) * sin(deg2rad(j)) ) / (cos(deg2rad(j)) + (img_center_x)) );
-//         }
-//         auto p0 = std::make_pair(x0, y0); auto p1 = std::make_pair(x1, y1);
-//         cout << x0 << "," << y0 << endl;
-//         auto points = std::make_pair(p0, p1);
-//         lines.push_back(points);
-//       }
-//     }
-//   }
-//   return lines;
-// }
+    int x1 = img_h;
+    int y1 = round( (float)(rho - (float)((x1 * cos(deg2rad(theta))))) / sin(deg2rad(theta)) );
+
+    int y2 = 0;
+    int x2 = round( (float)(rho - (float)((y2 * sin(deg2rad(theta))))) / cos(deg2rad(theta)) );
+
+    int y3 = img_w;
+    int x3 = round( (float)(rho - (float)((y3 * sin(deg2rad(theta))))) / cos(deg2rad(theta)) );
+
+    int x4 = img_center_y;
+    int y4 = round( (float)(rho - (float)((x4 * cos(deg2rad(theta))))) / sin(deg2rad(theta)) );
+
+    int y5 = img_center_x;
+    int x5 = round( (float)(rho - (float)((y5 * sin(deg2rad(theta))))) / cos(deg2rad(theta)) );
+
+    // Get points
+    auto p0 = make_pair(x0, y0);
+    auto p1 = make_pair(x1, y1);
+    auto p2 = make_pair(x2, y2);
+    auto p3 = make_pair(x3, y3);
+    auto p4 = make_pair(x4, y4);
+    auto p5 = make_pair(x5, y5);
+
+    auto l1 = make_pair(p0, p1);
+    auto l2 = make_pair(p2, p3);
+    auto l3 = make_pair(p4, p5);
+
+    if ( (y0 >= 0 && y0 <= img_w) && (y1 >= 0 && y1 <= img_w) )
+    {
+      pairs.push_back(l1);
+    }
+    if ( (x2 >= 0 && x2 <= img_h) && (x3 >= 0 && x3 <= img_h) )
+    {
+      pairs.push_back(l2);
+    }
+    if ( (y4 >= 0 && y4 <= img_w) && (x5 >= 0 && x5 <= img_h) )
+    {
+      pairs.push_back(l3);
+    }
+  }
+
+  // int x0, y0, x1, y1;
+
+  // for (int i = 0; i < accum_h; i++)
+  // {
+  //   for (int j = 0; j < accum_w; j++)
+  //   {
+  //     int current = accum[i][j];
+  //     if (current > threshold)
+  //     {
+  //       int north = i-1; int south = i+1;
+  //       int west = j-1; int east = j+1;
+  //       if ( (north >= 0 && west >= 0) && (east <= accum_w && south <= accum_h) )
+  //       {
+  //         if (current < accum[north][west]) continue;
+  //         else if (current < accum[north][east]) continue;
+  //         else if (current < accum[north][j]) continue;
+  //         else if (current < accum[south][j]) continue;
+  //         else if (current < accum[south][east]) continue;
+  //         else if (current < accum[south][west]) continue;
+  //         else if (current < accum[i][west]) continue;
+  //         else if (current < accum[i][east]) continue;
+  //         else // If current is local maxima
+  //         {
+  //           // Start converting to cartesian coordinates
+  //           // y = ( j - x*cos(i) ) / sin(i)
+  //           // x = ( j - y*sin(i) ) / cos(i)
+  //           // where i and j are rho and theta, respectively.
+  //           y0 = 0;
+  //           x0 = (i - (y0 * sin(deg2rad(j))) / cos(deg2rad(j)));
+  //           y0 = (i - (x0 * cos(deg2rad(j))) / sin(deg2rad(j)));
+
+  //           y1 = img_w;
+  //           x1 = (i - (y1 * sin(deg2rad(j))) / cos(deg2rad(j)));
+  //           y1 = (i - (x1 * cos(deg2rad(j))) / sin(deg2rad(j)));
+  //           auto p0 = std::pair<int,int>(x0, y0); auto p1 = std::pair<int,int>(x1, y1);
+  //           auto points = std::make_pair(p0, p1);
+  //           pairs.push_back(points);
+  //         }
+  //       }
+  //     }
+  //   }
+  // }
+  return pairs;
+}
 
 }  // namespace ComputerVisionProjects
