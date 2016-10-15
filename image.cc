@@ -225,7 +225,9 @@ DrawLine(int x0, int y0, int x1, int y1, int color,
   done = 0;
 
   while (!done) {
-    an_image->SetPixel(x,y,color);
+    // Draw only if within image borders.
+    if ((x>0 && x < an_image->num_rows()) && (y > 0 && y < an_image->num_columns()))
+      an_image->SetPixel(x,y,color); // No more aborting.
   
     // Move to the next point.
     switch(dir) {
