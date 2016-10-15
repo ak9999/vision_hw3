@@ -388,7 +388,8 @@ vector<double> theta_range()
 {
   vector<double> thetas;
   // From -90 to 90 degrees
-  for (int i = -90; i <= 90; i++)
+  // From 0 to 180 degrees
+  for (int i = 0; i <= 180; i++)
     thetas.push_back(deg2rad(i)); // Convert to radians then push back.
   return thetas;
 } // end theta_range
@@ -476,7 +477,7 @@ void hough_space(int** accumulator, Image &out)
       out.SetPixel(i, j, accumulator[i][j]);
 }
 
-void label_image(Image &an_image)
+int label_image(Image &an_image)
 {
   DisjointSets ds(400);
 
@@ -529,36 +530,34 @@ void label_image(Image &an_image)
   an_image.SetNumberGrayLevels(min(255, label));
 
   set<int> labels;
-
   for (int i = 0; i < rows; i++)
     for (int j = 0; j < cols; j++)
       labels.insert(an_image.GetPixel(i, j));
+
+  return labels.size() - 1;
 }
 
-// std::vector<std::pair<std::pair<int, int>, std::pair<int, int>>> GetLines(std::vector<std::pair<int,int>> lines, Image &an_image, int threshold)
-void GetLines(std::vector<std::pair<int,int>> lines, Image &an_image)
+void CalcLines(std::vector<std::pair<int,int>> lines, Image &an_image)
 {
-  // std::vector<std::pair<std::pair<int, int>, std::pair<int, int>>> pairs;
   int height = an_image.num_rows();
   int width = an_image.num_columns();
-
-  cout << "Height: " << height << endl;
-  cout << "Width: " << width << endl;
 
   int x0 = 0;
   int y0 = 0;
   int x1 = height;
   int y1 = 0;
+
+  // cout << "Lines found:" << endl;
   for (size_t i = 0; i < lines.size(); i++)
   {
     auto current_line = lines[i];
-    int theta = current_line.second;
-    int rho = current_line.first;
+    int rho = current_line.second;
+    int theta = current_line.first;
 
-    y0 = (rho - (x0 * cos(deg2rad(theta))) / sin(theta));
-    y1 = (rho - (x1 * cos(deg2rad(theta))) / sin(theta));
+    y0 = (rho - ( x0 * cos( deg2rad(theta) ) ) / sin( deg2rad(theta) ) );
+    y1 = (rho - ( x1 * cos( deg2rad(theta) ) ) / sin( deg2rad(theta) ) );
 
-    if
+    if // Check points are within image boundaries.
     (
         x0 >= 0 && x0 <= height &&
         x1 >= 0 && x1 <= height &&
@@ -566,10 +565,11 @@ void GetLines(std::vector<std::pair<int,int>> lines, Image &an_image)
         y1 >= 0 && y1 <= width
     )
     {
+      // cout << "(" << x0 << "," << y0 << ")" << " " << "(" << x1 << "," << y1 << ")" << endl;
       DrawLine(x0, y0, x1, y1, 255, &an_image);
-      // cout << "(" << x0 << "," << y0 << ")" << " to " << "(" << x1 << "," << y1 << ")" << endl;
     }
   }
+  // cout << endl;
 }
 
 }  // namespace ComputerVisionProjects

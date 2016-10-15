@@ -91,10 +91,9 @@ int** hough_accumulator(Image &an_image, std::vector<double>& thetas);
 
 void hough_space(int** accumulator, Image &out);
 
-void label_image(Image &an_image);
+int label_image(Image &an_image);
 
-// std::vector<Line> GetLines(std::vector<std::pair<int,int>> lines, int img_h, int img_w, int threshold);
-void GetLines(std::vector<std::pair<int,int>> lines, Image &an_image);
+void CalcLines(std::vector<std::pair<int,int>> lines, Image &an_image);
 
 }  // namespace ComputerVisionProjects
 
