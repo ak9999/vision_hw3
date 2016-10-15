@@ -7,6 +7,9 @@
 #include <string>
 #include <cstdlib> // for std::atof
 #include "image.h"
+#include <vector>
+#include <utility>
+#include <typeinfo>
 
 using namespace std;
 using namespace ComputerVisionProjects;
@@ -50,27 +53,40 @@ int main(int argc, char ** argv)
 		width = stoi(str);
 	} // I have read the first two lines of the file.
 
-	// Create accumulator array and re-create Hough space image.
-	Image hough; hough.AllocateSpaceAndSetSize(diagonal, width);
-	hough.SetNumberGrayLevels(255);
+	vector<pair<int,int>> rho_theta; // rho_theta pairs
 
-	int** accumulator = new int*[diagonal];
+	vector<vector<int>> accumulator;
+	accumulator.resize(diagonal, vector<int>(width, 0));
 	for (int i = 0; i < diagonal; i++)
 	{
-		accumulator[i] = new int[width];
 		for (int j = 0; j < width; j++)
 		{
 			string str;
 			getline(of, str);
 			int votes = stoi(str);
 			accumulator[i][j] = votes;
-			hough.SetPixel(i, j, votes);
+			cout << votes << endl;
+			if (votes > threshold)
+			{
+				rho_theta.push_back(make_pair(i,j));
+			}
 		}
-	} // Accumulator array obtained!
+	}
+	of.close(); // Don't need the file open anymore.
 
-	// Threshold the hough image.
-	Threshold(hough, threshold);
-	label_image(hough);
+	// Get a vector of lines.
+	auto vector_of_lines = GetLines(rho_theta, img.num_rows(), img.num_columns(), threshold);
+
+	for (size_t i = 0; i < vector_of_lines.size(); i++)
+	{
+		auto p0 = vector_of_lines[i].first;
+		int x0 = p0.first;
+		int y0 = p0.second;
+		
+		auto p1 = vector_of_lines[i].second;
+		int x1 = p1.first;
+		int y1 = p1.second;
+	}
 
 	if (!WriteImage(output, img)) {
 		cout << "Can\'t write to file." << endl;
