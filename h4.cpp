@@ -68,7 +68,9 @@ int main(int argc, char ** argv)
 		}
 	} // Accumulator array obtained!
 
-	// code
+	// Threshold the hough image.
+	Threshold(hough, threshold);
+	label_image(hough);
 
 	if (!WriteImage(output, img)) {
 		cout << "Can\'t write to file." << endl;
