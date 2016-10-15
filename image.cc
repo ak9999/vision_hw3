@@ -14,6 +14,9 @@
 #include <cmath>
 #include <vector>
 
+#include "DisjSets.h"
+#include <set>
+
 using namespace std;
 
 // Pragmas
@@ -468,6 +471,81 @@ void hough_space(int** accumulator, Image &out)
   for (int i = 0; i < diagonal; i++)
     for (int j = 0; j < 181; j++)
       out.SetPixel(i, j, accumulator[i][j]);
+}
+
+void label_image(Image &an_image)
+{
+  DisjointSets ds(400);
+
+  int label = 2; // Start label counter.
+  int rows = an_image.num_rows();
+  int cols = an_image.num_columns();
+
+  // First pass.
+  for (int i = 0; i < rows; i++)
+  {
+    for (int j = 0; j < cols; j++)
+    {
+      int current = an_image.GetPixel(i, j); // current pixel
+
+      if (current == 1)
+      {
+        int north = an_image.GetPixel(i-1, j); // North
+        int west = an_image.GetPixel(i, j-1); // West
+        int northwest = an_image.GetPixel(i-1, j-1); // North-West
+
+        if (northwest != 0)
+          current = northwest;
+        if (west == north && north != 0)
+          current = north;
+        if ((west != 0 && north == 0) || (west == 0 && north !=0))
+          current = max(west, north);
+        if (northwest == 0 && north == 0 && west == 0)
+        {
+          current = label;
+          label++;
+        }
+        if ((north != west) && (north != 0 && west != 0))
+        {
+          current = north;
+          ds.UnionSets(ds.Find(north), ds.Find(west));
+        }
+        an_image.SetPixel(i, j, ds.Find(current));
+      }
+    }
+  }
+
+  // Second pass.
+  for (int i = 0; i < rows; i++)
+  {
+    for (int j = 0; j < cols; j++)
+    {
+      an_image.SetPixel(i, j, ds.Find(an_image.GetPixel(i, j)));
+    }
+  }
+
+  an_image.SetNumberGrayLevels(min(255, label));
+
+  for (int i = 0; i < rows; i++)
+  {
+    for (int j = 0; j < cols; j++)
+    {
+      if (an_image.GetPixel(i, j) == 0)
+        an_image.SetPixel(i, j, 255);
+    }
+  }
+
+  set<int> labels;
+
+  for (int i = 0; i < rows; i++)
+    for (int j = 0; j < cols; j++)
+      labels.insert(an_image.GetPixel(i, j));
+
+  cout << "Size: " << labels.size() << endl;
+  for (auto &s : labels)
+    cout << s << endl;
+
+  cout << "The resulting image should have " << labels.size() - 1  << " objects." << endl;
 }
 
 }  // namespace ComputerVisionProjects

@@ -80,8 +80,6 @@ void Sobel(Image &in, Image &out);
 
 void InitBlankImage(Image &an_image, int height, int width, int num_gray_levels);
 
-// int** HoughTransform(Image &an_image, int height, int width);
-
 std::vector<double> theta_range();
 std::vector<int> get_rhos(Image &an_image);
 std::vector<int> nonzero_y(Image &an_image);
@@ -91,7 +89,7 @@ int** hough_accumulator(Image &an_image, std::vector<double>& thetas);
 
 void hough_space(int** accumulator, Image &out);
 
-int** read_hough_space(std::fstream fs);
+void label_image(Image &an_image);
 
 }  // namespace ComputerVisionProjects
 
