@@ -9,6 +9,8 @@
 #include <string>
 #include <vector>
 #include <fstream>
+#include <vector>
+#include <utility>
 
 namespace ComputerVisionProjects {
 
@@ -90,6 +92,8 @@ int** hough_accumulator(Image &an_image, std::vector<double>& thetas);
 void hough_space(int** accumulator, Image &out);
 
 void label_image(Image &an_image);
+
+std::vector<std::pair<std::pair<int, int>, std::pair<int, int>>> GetLines(int **accum, int accum_h, int accum_w, int img_h, int img_w, int threshold);
 
 }  // namespace ComputerVisionProjects
 

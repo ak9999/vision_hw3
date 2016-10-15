@@ -16,6 +16,7 @@
 
 #include "DisjSets.h"
 #include <set>
+#include <utility>
 
 using namespace std;
 
@@ -541,11 +542,77 @@ void label_image(Image &an_image)
     for (int j = 0; j < cols; j++)
       labels.insert(an_image.GetPixel(i, j));
 
-  cout << "Size: " << labels.size() << endl;
-  for (auto &s : labels)
-    cout << s << endl;
+  // cout << "Size: " << labels.size() << endl;
+  // for (auto &s : labels)
+  //   cout << s << endl;
 
-  cout << "The resulting image should have " << labels.size() - 1  << " objects." << endl;
+  //cout << "The resulting image should have " << labels.size() - 1  << " objects." << endl;
 }
+
+// A vector of pairs of std::pairs
+// std::vector<std::pair<std::pair<int, int>, std::pair<int, int>>> GetLines(int **accum, int accum_h, int accum_w, int img_h, int img_w, int threshold)
+// {
+//   std::vector<std::pair<std::pair<int, int>, std::pair<int, int>>> lines;
+
+//   float accum_center_x = accum_w / 2.0;
+//   float accum_center_y = accum_h / 2.0;
+//   float img_center_x = img_w / 2.0;
+//   float img_center_y = img_h / 2.0;
+
+//   for (int i = 0; i < accum_h; i++)
+//   {
+//     for (int j = 0; j < accum_w; j++)
+//     {
+//       if (accum[i][j] >= threshold)
+//       {
+//         // Check local maxima
+//         int max = accum[i][j];
+//         for (int ly = -2; ly <= 2; ly++)
+//         {
+//           for (int lx = -2; lx <= 2; lx++)
+//           {
+//             if ( ( (ly + i) >= 0 ) && ((ly + i) < accum_h) && ( (lx + j) >= 0 && (lx + j) < accum_w ) )
+//             {
+//               if ( accum[i+ly][j+lx] > max)
+//               {
+//                 max = accum[i+ly][j+lx];
+//                 ly = 3; lx = 3; // Break out of the loop if we find a new max.
+//               }
+//             }
+//           }
+//         }
+//         if (max > accum[i][j]) continue;
+
+//         // Get coordinates
+//         int x0, y0, x1, y1; // Initialize
+//         x0 = x1 = y0 = y1 = 0; // Assignment.
+
+//         // Start converting to cartesian coordinates
+//         // y = ( j - x*cos(i) ) / sin(i)
+//         // x = ( j - y*sin(i) ) / cos(i)
+//         // where i and j are rho and theta, respectively.
+//         if (j >= 45 && j <= 135)
+//         {
+//           x0 = 0;
+//           y0 = floor( ( (float)( (i - accum_center_y) - (x0 - img_center_x) ) * cos(deg2rad(j)) ) / (sin(deg2rad(j)) + (img_center_y)) );
+//           x1 = img_w - 0;
+//           y1 = floor( ( (float)( (i - accum_center_y) - (x1 - img_center_x) ) * cos(deg2rad(j)) ) / (sin(deg2rad(j)) + (img_center_y)) );
+//         }
+//         else
+//         {
+//           y0 = 0;
+//           x0 = floor( ( (float)( (i - accum_center_y) - (y0 - img_center_y) ) * sin(deg2rad(j)) ) / (cos(deg2rad(j)) + (img_center_x)) );
+//           y1 = img_h - 0;
+//           x1 = floor( ( (float)( (i - accum_center_y) - (y1 - img_center_y) ) * sin(deg2rad(j)) ) / (cos(deg2rad(j)) + (img_center_x)) );
+//         }
+//         auto p0 = std::make_pair(x0, y0); auto p1 = std::make_pair(x1, y1);
+//         cout << x0 << "," << y0 << endl;
+//         auto points = std::make_pair(p0, p1);
+//         lines.push_back(points);
+//       }
+//     }
+//   }
+//   return lines;
+// }
 
 }  // namespace ComputerVisionProjects
