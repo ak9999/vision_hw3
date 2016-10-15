@@ -9,12 +9,12 @@
 #include "image.h"
 #include <vector>
 #include <utility>
-#include <typeinfo>
+#include <cmath>
 
 using namespace std;
 using namespace ComputerVisionProjects;
 
-// Ignore warnings
+// Leave me alone
 #pragma GCC diagnostic ignored "-Wsign-compare"
 
 int main(int argc, char ** argv)
@@ -38,10 +38,10 @@ int main(int argc, char ** argv)
 		return 0;
 	}
 
-	fstream in(array);
+	ifstream in(array);
 	if (!in.is_open())
 	{
-		cout << "Could not open " << array << " for writing. Abort." << endl;
+		cout << "Could not open " << array << " for writing. Sorry." << endl;
 		return 0;
 	}
 
@@ -77,22 +77,7 @@ int main(int argc, char ** argv)
 		}
 	}
 
-	// Get a vector of lines.
-	// auto vector_of_lines = GetLines(rho_theta, img.num_rows(), img.num_columns(), threshold);
-	GetLines(rho_theta, img);
-
-	// for (size_t i = 0; i < vector_of_lines.size(); i++)
-	// {
-	// 	auto p0 = vector_of_lines[i].first;
-	// 	int x0 = p0.first;
-	// 	int y0 = p0.second;
-		
-	// 	auto p1 = vector_of_lines[i].second;
-	// 	int x1 = p1.first;
-	// 	int y1 = p1.second;
-
-	// 	DrawLine(x0, y0, x1, y1, 255, &img);
-	// }
+	CalcLines(rho_theta, img);
 
 	if (!WriteImage(output, img)) {
 		cout << "Can\'t write to file." << endl;
