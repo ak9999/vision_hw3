@@ -21,6 +21,9 @@ I. Parts Completed
 II. Bugs Encountered
 h4 is broken.
 
+DrawLines would abort in h4, so I went into image.cc and added a check to make sure
+	DrawLines would only attempt to color a pixel if and only if it is within the image boundaries.
+
 III. Run Instructions
 - Run `make` to build
 - ./h1 {input gray-level image} {output gray-level edge image}
